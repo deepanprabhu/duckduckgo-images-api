@@ -1,21 +1,30 @@
 #!/usr/bin/python3
-import requests
 import re
 import json
 import time
 
+import requests
+import structlog
 
-def search(keywords, max_results=None):
+log = structlog.getLogger(__name__)
+
+
+def search(keywords, max_results=None, **args):
     """search images."""
     url = 'https://duckduckgo.com/'
-    params = {
-        'q': keywords
-    }
+    vqd = args.get('vqd', None)
+    requestUrl = args.get('request_url', None)
+    if vqd is None:
+        params = {
+            'q': keywords
+        }
 
-    #   First make a request to above URL, and parse out the 'vqd'
-    #   This is a special token, which should be used in the subsequent request
-    res = requests.post(url, data=params)
-    searchObj = re.search(r'vqd=(\d+)\&', res.text, re.M | re.I)
+        # First make a request to above URL, and parse out the 'vqd'
+        # This is a special token,
+        # which should be used in the subsequent request
+        res = requests.post(url, data=params)
+        searchObj = re.search(r'vqd=(\d+)\&', res.text, re.M | re.I)
+        vqd = searchObj.group(1)
 
     headers = {
         'dnt': '1',
@@ -32,24 +41,33 @@ def search(keywords, max_results=None):
         ('l', 'wt-wt'),
         ('o', 'json'),
         ('q', keywords),
-        ('vqd', searchObj.group(1)),
+        ('vqd', vqd),
         ('f', ',,,'),
         ('p', '2')
     )
 
-    requestUrl = url + "i.js"
+    if requestUrl is None:
+        requestUrl = url + "i.js"
 
     while True:
+        if requestUrl is None:
+            break
+        log.debug('request url', v=requestUrl)
         res = requests.get(requestUrl, headers=headers, params=params)
         data = json.loads(res.text)
-        printJson(data["results"])
         if "next" not in data:
-            exit(0)
-        requestUrl = url + data["next"]
+            requestUrl = None
+        else:
+            requestUrl = url + data["next"]
+        yield {
+            'json_data': data,
+            'next_request_url': requestUrl,
+            'vqd': vqd,
+        }
         time.sleep(5)
 
 
-def printJson(objs):
+def print_json(objs):
     for obj in objs:
         print("Width {0}, Height {1}".format(obj["width"], obj["height"]))
         print("Thumbnail {0}".format(obj["thumbnail"]))
