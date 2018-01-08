@@ -1,0 +1,48 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+<form method="GET" action="/">
+  <div class="form-group"> {{ form.query.label }} {{ form.query(size=100, class_="form-control") }} </div>
+  <div class="form-group row">
+    <div class="col-xs-1">{{ form.p_value.label }} {{ form.p_value(size=1, class_="form-control") }} </div>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+{% if entry.search_results|length > 1 %}
+{{pagination_section()}}
+{% endif %}
+<br>
+{% for search_result_row in entry.search_results|batch(4) %}
+  <div class="row">
+    {% for search_result in search_result_row %}
+      <figure class="col-sm-3">
+        <a href="{{url_for('imageurl.edit_view', id=search_result.image_url|replace('.', '..'), url=url_for('admin.index', query=query, page=pagination.page))}}">
+          <img style="max-height: 280px; max-width: 280px; " class="img-thumbnail img-responsive center-block" src="{{search_result.thumbnail_url}}">
+        </a>
+        <figcaption>
+	  <a href="{{search_result.image_url}}">[{{search_result.image_url_model.size}}]</a>
+	  <a href="{{search_result.url}}">{{search_result.title}}</a>
+         </figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+{% endfor %}
+<br>
+{% if entry.search_results|length > 1 %}
+{{pagination_section(info=False)}}
+{% endif %}
+{% endblock body %}
+
+{% macro pagination_section(info=True)%}
+  {{ pagination.info }}
+  {{ pagination.links }}
+  {% if query and not pagination.has_next and entry %}
+  <ul class="pagination">
+    <li class="next"><a href="{{url_for('admin.index', query=query, page=pagination.page+1, p_value=form.p_value.data)}}">load next page</a></li>
+  </ul>
+  {% elif query and not entry %}
+  <ul class="pagination">
+    <li><a href="{{url_for('admin.index', query=query, page=pagination.page-1, p_value=form.p_value.data)}}">load prev page</a></li>
+    <li><a href="{{url_for('admin.index', query=query, page=1, p_value=form.p_value.data)}}">load first page</a></li>
+  </ul>
+  {% endif %}
+{% endmacro %}
