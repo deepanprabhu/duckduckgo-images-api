@@ -7,6 +7,8 @@ Python Scraper - Scraping `DuckDuckGo`_ image search resutls with simple source 
 First request pulls a much needed token.
 From 2nd request, we pull search results for FREE !!
 
+It is made with python 3.5 and tested under ubuntu 17.10
+
 ---------------
 Getting Started
 ---------------
