@@ -38,6 +38,21 @@ When running the following command, the program will run server with threaded an
 
   duckduckgo-images-api-server run --threaded --port 5003 --reloader --db-path ddg.db
 
+With above configuration, it can be used as hydrus booru with below booru setting:
+
+.. code:: yaml
+
+  !Booru
+  _advance_by_page_num: true
+  _image_data: original image url
+  _image_id: null
+  _name: ddg booru
+  _search_separator: +
+  _search_url: http://127.0.0.1:5003/?query=%tags%&p_value=-1&page=%index%
+  _tag_classnames_to_namespaces: {tag-type-query: ddg query, tag-type-title: ddg title,
+    tag-type-url: ddg url}
+  _thumb_classname: thumb
+
 -----------------
 Running the tests
 -----------------

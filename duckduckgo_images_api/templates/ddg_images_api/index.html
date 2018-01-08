@@ -15,7 +15,7 @@
   <div class="row">
     {% for search_result in search_result_row %}
       <figure class="col-sm-3">
-        <a href="{{url_for('imageurl.edit_view', id=search_result.image_url|replace('.', '..'), url=url_for('admin.index', query=query, page=pagination.page))}}">
+        <a class="thumb" href="{{url_for('imageurl.edit_view', id=search_result.image_url|replace('.', '..'), url=url_for('admin.index', query=query, page=pagination.page))}}">
           <img style="max-height: 280px; max-width: 280px; " class="img-thumbnail img-responsive center-block" src="{{search_result.thumbnail_url}}">
         </a>
         <figcaption>

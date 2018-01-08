@@ -1,0 +1,47 @@
+{% extends 'admin/model/edit.html' %}
+
+{% block body %}
+  {{ super() }}
+  <table class="table table-bordered">
+    <tr>
+      <th><a href="{{form._obj.value}}">original image url</a></th>
+      <td><a href="{{form._obj.value}}">{{form._obj.value}}</a> </td>
+    </tr>
+  </table>
+
+  {% for search_result in form._obj.search_results %}
+    <table class="table table-bordered">
+      <tr>
+	<th>Title</th>
+	<td><a href="#" class="tag-type-title">{{search_result.title}}</a></td>
+      </tr>
+      <tr>
+	<th>URL</th>
+	<td> <a class="tag-type-url" href="{{search_result.url}}">{{search_result.url}}</a> </td>
+      </tr>
+      <tr><th>Source</th><td>{{search_result.source}}</td></tr>
+      <tr><th>Created at</th><td>{{search_result.created_at}}</td></tr>
+      <tr>
+	<th>Search</th>
+	<td>
+	  <table class="table table-bordered">
+	    <tr>
+	      <th>Query</th>
+	      <th>Page</th>
+	      <th>p Value</th>
+	      <th>Creatd at</th>
+	    </tr>
+	    {% for sm in search_result.search_models %}
+	      <tr>
+		<td><a href="#" class="tag-type-query">{{sm.search_query}}</a></td>
+		<td>{{sm.page}}</td>
+		<td>{{sm.p_value}}</td>
+		<td>{{sm.created_at}}</td>
+	      </tr>
+	    {% endfor %}
+	  </table>
+	<td>
+      </tr>
+    </table>
+  {% endfor %}
+{% endblock %}

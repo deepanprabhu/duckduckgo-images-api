@@ -52,6 +52,7 @@ class ImageUrlView(ModelView):
     column_formatters = {
        'value': _value_formatter,
     }
+    edit_template = 'ddg_images_api/imageurl_edit.html'
 
 
 class SearchView(ModelView):
