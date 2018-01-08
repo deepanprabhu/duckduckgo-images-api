@@ -60,7 +60,7 @@ Contributing
 
 If you would like to contribute changes, Feel free to do SO !
 
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
+Please read `CONTRIBUTING.md`_ for details on our code of conduct, and the process for submitting pull requests to us.
 
 ----------
 Versioning
@@ -94,3 +94,4 @@ Acknowledgments
 .. _Deepan Prabhu Babu: https://github.com/deepanprabhu/duckduckgo-images-api
 .. _Rachmadani Haryono: https://github.com/rachmadaniHaryono
 .. _SemVer: http://semver.org/
+.. _CONTRIBUTING.md: CONTRIBUTING.md
