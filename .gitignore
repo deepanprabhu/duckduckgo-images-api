@@ -103,3 +103,4 @@ ENV/
 # custom
 /cassette
 note.md
+ddg.db

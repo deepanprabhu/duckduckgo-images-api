@@ -27,7 +27,7 @@ setuptools.setup(
     extras_require={
         'server': [
             'Flask-Admin>=1.5.0',
-            'Flask-Bootstrap>=3.3.7.1',
+            'flask-paginate>=0.5.1',
             'Flask-SQLAlchemy>=2.3.1',
             'Flask-WTF>=0.14.2',
             'Flask>=0.12.2',
@@ -44,7 +44,8 @@ setuptools.setup(
 
     entry_points={
         'console_scripts': [
-            'duckduckgo-images-api = google_images_download.__main__:cli',
+            'duckduckgo-images-api = duckduckgo_images_api.__main__:cli',
+            'duckduckgo-images-api-server = duckduckgo_images_api.server:cli',
         ]
     },
 )
