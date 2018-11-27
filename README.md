@@ -1,5 +1,6 @@
 # duckduckgo-images-api - Programatically use DuckDuckGo Image Search Results
 
+Tested with Python 2.7
 Python Scraper - Scraping DuckDuckGo Image Search Results.
 Simple source code.
 
