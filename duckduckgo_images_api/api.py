@@ -79,4 +79,4 @@ def printJson(objs):
         print "Image {0}".format(obj["image"]);
         print "__________";
 
-search("audi q6");
+#  search("audi q6");
