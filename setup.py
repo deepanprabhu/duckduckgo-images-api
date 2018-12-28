@@ -3,13 +3,13 @@ import setuptools
 
 setuptools.setup(
     name="duckduckgo_images_api",
-    version="0.1.0",
+    version="0.1.1",
     url="https://github.com/deepanprabhu/duckduckgo-images-api",
     author="Deepan Prabhu Babu",
-    description="Using python to scrape DuckDuckGo Image Search Resuts",
+    description="DuckDuckGo Image Search Resuts - Scraped using Python !",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    keywords="duckduckgo image downloader",
+    keywords="duckduckgo image api",
     license="MIT",
     packages=setuptools.find_packages(),
     include_package_data=True,
