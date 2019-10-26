@@ -1,82 +1,85 @@
-import requests;
-import re;
-import json;
-import time;
-import logging;
+import requests
+import re
+import json
+import time
+import logging
 
-logging.basicConfig(level=logging.DEBUG);
+HEADERS = {
+    'dnt': '1',
+    'accept-encoding': 'gzip, deflate, sdch, br',
+    'x-requested-with': 'XMLHttpRequest',
+    'accept-language': 'en-GB,en-USq=0.8,enq=0.6,msq=0.4',
+    'user-agent': 'Mozilla/5.0 (X11 Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
+    'accept': 'application/json, text/javascript, */* q=0.01',
+    'referer': 'https://duckduckgo.com/',
+    'authority': 'duckduckgo.com',
+}
+
+BASE_URL = 'https://duckduckgo.com/'
+
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-def search(keywords, max_results=None):
-    url = 'https://duckduckgo.com/';
+def search(term, max_results=None):
+    token = _get_token(term)
+
+    params = _build_params(term, token)
+
+    request_url = BASE_URL + "i.js"
+
+    results_generator = _get_results(request_url, headers=HEADERS, params=params)
+
+    for results in results_generator:
+        for result in results:
+            yield result
+
+def _get_token(term, url = BASE_URL):
     params = {
-    	'q': keywords
-    };
-
-    logger.debug("Hitting DuckDuckGo for Token");
-
-    #   First make a request to above URL, and parse out the 'vqd'
-    #   This is a special token, which should be used in the subsequent request
-    res = requests.post(url, data=params)
-    searchObj = re.search(r'vqd=([\d-]+)\&', res.text, re.M|re.I);
-
-    if not searchObj:
-        logger.error("Token Parsing Failed !");
-        return -1;
-
-    logger.debug("Obtained Token");
-
-    headers = {
-        'dnt': '1',
-        'accept-encoding': 'gzip, deflate, sdch, br',
-        'x-requested-with': 'XMLHttpRequest',
-        'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6,ms;q=0.4',
-        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
-        'accept': 'application/json, text/javascript, */*; q=0.01',
-        'referer': 'https://duckduckgo.com/',
-        'authority': 'duckduckgo.com',
+        'q': term
     }
 
-    params = (
-    ('l', 'wt-wt'),
-    ('o', 'json'),
-    ('q', keywords),
-    ('vqd', searchObj.group(1)),
-    ('f', ',,,'),
-    ('p', '2')
+    logger.debug("Hitting DuckDuckGo for Token")
+
+    #   Make a request to above URL, and parse out the 'vqd'
+    response = requests.post(url, data=params)
+    search_object = re.search(r'vqd=([\d-]+)\&', response.text, re.M|re.I)
+
+    if search_object:
+        logger.debug("Obtained Token")
+        
+        return search_object.group(1)
+    else:
+        logger.error("Token Parsing Failed !")
+        raise Exception("Token Parsing Failed")
+
+def _build_params(term, token):
+    return (
+        ('l', 'wt-wt'),
+        ('o', 'json'),
+        ('q', term),
+        ('vqd', token),
+        ('f', ',,,'),
+        ('p', '2')
     )
 
-    requestUrl = url + "i.js";
+def _get_results(request_url, headers, params):
+    while request_url is not None:
+        data = None
 
-    logger.debug("Hitting Url : %s", requestUrl);
-
-    while True:
-        while True:
+        while data is None:
             try:
-                res = requests.get(requestUrl, headers=headers, params=params);
-                data = json.loads(res.text);
-                break;
+                response = requests.get(request_url, headers=headers, params=params)
+                data = json.loads(response.text)
             except ValueError as e:
-                logger.debug("Hitting Url Failure - Sleep and Retry: %s", requestUrl);
-                time.sleep(5);
-                continue;
+                logger.debug("Hitting Url Failure - Sleep and Retry: %s", request_url)
+                time.sleep(5)
 
-        logger.debug("Hitting Url Success : %s", requestUrl);
-        printJson(data["results"]);
+        logger.debug("Hitting Url Success : %s", request_url)
 
-        if "next" not in data:
-            logger.debug("No Next Page - Exiting");
-            exit(0);
+        if "next" in data:
+            request_url = BASE_URL + data["next"]
+        else:
+            request_url = None
+            logger.debug("No Next Page - Exiting")
 
-        requestUrl = url + data["next"];
-
-def printJson(objs):
-    for obj in objs:
-        print "Width {0}, Height {1}".format(obj["width"], obj["height"]);
-        print "Thumbnail {0}".format(obj["thumbnail"]);
-        print "Url {0}".format(obj["url"]);
-        print "Title {0}".format(obj["title"].encode('utf-8'));
-        print "Image {0}".format(obj["image"]);
-        print "__________";
-
-#  search("audi q6");
+        yield data["results"]
