@@ -13,18 +13,24 @@ logging.disable(logging.WARN)
 class TestApi(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        pass
+
+    def setUp(self):
         mockery = Mockery(os.path.join('duckduckgo_images_api','fixtures.json'))
         duckduckgo_images_api.api.requests.post = mockery.mockPost
         duckduckgo_images_api.api.requests.get = mockery.mockGet
-
-    def setUp(self):
-        pass
 
     def tearDown(self):
         pass
 
     def test_search(self):
         results = search("fake search term")
+        fullResults = list(results)
+
+        self.assertEqual(len(fullResults), 193)
+
+    def test_search_limit(self):
+        results = search("fake search term", max_queries=2)
         fullResults = list(results)
 
         self.assertEqual(len(fullResults), 193)

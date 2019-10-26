@@ -19,7 +19,10 @@ BASE_URL = 'https://duckduckgo.com/'
 
 logger = logging.getLogger(__name__)
 
-def search(term, max_results=None):
+def search(term, max_queries=None):
+    """
+        max_queries is zero based, or None for no limit
+    """
     token = _get_token(term)
 
     params = _build_params(term, token)
@@ -28,9 +31,12 @@ def search(term, max_results=None):
 
     results_generator = _get_results(request_url, headers=HEADERS, params=params)
 
-    for results in results_generator:
+    for queries, results in enumerate(results_generator):
         for result in results:
             yield result
+
+        if max_queries and queries > max_queries:
+            break
 
 def _get_token(term, url = BASE_URL):
     params = {
@@ -61,7 +67,7 @@ def _build_params(term, token):
         ('p', '2')
     )
 
-def _get_results(request_url, headers, params):
+def _get_results(request_url, headers, params, sleep_interval = 5):
     while request_url is not None:
         data = None
 
@@ -71,7 +77,7 @@ def _get_results(request_url, headers, params):
                 data = json.loads(response.text)
             except ValueError as _e:
                 logger.debug("Hitting Url Failure - Sleep and Retry: %s", request_url)
-                time.sleep(5)
+                time.sleep(sleep_interval)
 
         logger.debug("Hitting Url Success : %s", request_url)
 
