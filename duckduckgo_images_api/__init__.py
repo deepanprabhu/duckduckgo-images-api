@@ -1,0 +1,1 @@
+from duckduckgo_images_api.api import search
