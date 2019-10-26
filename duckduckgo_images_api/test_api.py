@@ -4,11 +4,11 @@ import os
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 from duckduckgo_images_api import search
 import duckduckgo_images_api
+
+logging.disable(logging.WARN)
+logger = logging.getLogger(__name__)
 
 class MockResponse:
     def __init__(self, value):
@@ -34,10 +34,12 @@ def MockGet(*args, **kwargs):
 
     return MockResponse(get_fixture())
 
-duckduckgo_images_api.api.requests.post = MockPost
-duckduckgo_images_api.api.requests.get = MockGet
-
 class TestApi(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        duckduckgo_images_api.api.requests.post = MockPost
+        duckduckgo_images_api.api.requests.get = MockGet
+
     def setUp(self):
         pass
 
@@ -45,13 +47,13 @@ class TestApi(unittest.TestCase):
         pass
 
     def test_search(self):
-        results = search("fake search term")
-
-        fullResults = list(results)
+        # duckduckgo_images_api.api.logger
+        # logging.getLogger(results.__name__)
+        with self.assertLogs(logger=duckduckgo_images_api.api.logger, level='DEBUG') as cm:
+            results = search("fake search term")
+            fullResults = list(results)
 
         self.assertEqual(len(fullResults), 193)
 
-        #self.assertIn(task_name, task.keys())
-        
 if __name__ == '__main__':
     unittest.main()
