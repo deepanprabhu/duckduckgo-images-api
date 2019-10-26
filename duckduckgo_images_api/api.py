@@ -17,7 +17,6 @@ HEADERS = {
 
 BASE_URL = 'https://duckduckgo.com/'
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def search(term, max_results=None):
