@@ -19,9 +19,9 @@ BASE_URL = 'https://duckduckgo.com/'
 
 logger = logging.getLogger(__name__)
 
-def search(term, max_queries=None):
+def search(term, query_limit=None):
     """
-        max_queries is zero based, or None for no limit
+        query_limit should be an int, 0 or None for no limit
     """
     token = _get_token(term)
 
@@ -35,7 +35,7 @@ def search(term, max_queries=None):
         for result in results:
             yield result
 
-        if max_queries and queries > max_queries:
+        if query_limit is not None and query_limit is not 0 and queries + 1 >= query_limit:
             break
 
 def _get_token(term, url = BASE_URL):
@@ -45,7 +45,6 @@ def _get_token(term, url = BASE_URL):
 
     logger.debug("Hitting DuckDuckGo for Token")
 
-    #   Make a request to above URL, and parse out the 'vqd'
     response = requests.post(url, data=params)
     search_object = re.search(r'vqd=([\d-]+)\&', response.text, re.M|re.I)
 
