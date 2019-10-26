@@ -45,13 +45,11 @@ class TestApi(unittest.TestCase):
         pass
 
     def test_search(self):
-        self.assertEqual(1, 1)
-
         results = search("fake search term")
 
         fullResults = list(results)
 
-        self.assertEqual(len(fullResults), 49)
+        self.assertEqual(len(fullResults), 193)
 
         #self.assertIn(task_name, task.keys())
         

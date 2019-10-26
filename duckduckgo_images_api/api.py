@@ -70,7 +70,7 @@ def _get_results(request_url, headers, params):
             try:
                 response = requests.get(request_url, headers=headers, params=params)
                 data = json.loads(response.text)
-            except ValueError as e:
+            except ValueError as _e:
                 logger.debug("Hitting Url Failure - Sleep and Retry: %s", request_url)
                 time.sleep(5)
 
