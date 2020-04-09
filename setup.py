@@ -3,10 +3,10 @@ import setuptools
 
 setuptools.setup(
     name="duckduckgo_images_api",
-    version="0.1.1",
+    version="0.1.2",
     url="https://github.com/deepanprabhu/duckduckgo-images-api",
     author="Deepan Prabhu Babu",
-    description="DuckDuckGo Image Search Resuts - Scraped using Python !",
+    description="DuckDuckGo Image Search Results - using Python !",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     keywords="duckduckgo image api",

@@ -27,23 +27,25 @@ def search(keywords, max_results=None):
     logger.debug("Obtained Token");
 
     headers = {
-        'dnt': '1',
-        'accept-encoding': 'gzip, deflate, sdch, br',
-        'x-requested-with': 'XMLHttpRequest',
-        'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6,ms;q=0.4',
-        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
-        'accept': 'application/json, text/javascript, */*; q=0.01',
-        'referer': 'https://duckduckgo.com/',
         'authority': 'duckduckgo.com',
+        'accept': 'application/json, text/javascript, */*; q=0.01',
+        'sec-fetch-dest': 'empty',
+        'x-requested-with': 'XMLHttpRequest',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'cors',
+        'referer': 'https://duckduckgo.com/',
+        'accept-language': 'en-US,en;q=0.9',
     }
 
     params = (
-    ('l', 'wt-wt'),
-    ('o', 'json'),
-    ('q', keywords),
-    ('vqd', searchObj.group(1)),
-    ('f', ',,,'),
-    ('p', '2')
+        ('l', 'us-en'),
+        ('o', 'json'),
+        ('q', keywords),
+        ('vqd', searchObj.group(1)),
+        ('f', ',,,'),
+        ('p', '1'),
+        ('v7exp', 'a'),
     )
 
     requestUrl = url + "i.js";
@@ -79,4 +81,4 @@ def printJson(objs):
         print "Image {0}".format(obj["image"]);
         print "__________";
 
-#  search("audi q6");
+search("audi q6");
