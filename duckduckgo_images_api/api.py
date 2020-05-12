@@ -1,14 +1,19 @@
-import requests;
-import re;
-import json;
-import time;
-import logging;
+import requests
+import re
+import json
+import time
+import logging
+import numpy as np
+
 
 logging.basicConfig(level=logging.DEBUG);
 logger = logging.getLogger(__name__)
 
-def search(keywords, max_results=None):
+def search(keywords, max_results= None):
     url = 'https://duckduckgo.com/';
+    img_list = []
+    list_size =  max_results -1
+    
     params = {
     	'q': keywords
     };
@@ -64,21 +69,30 @@ def search(keywords, max_results=None):
                 continue;
 
         logger.debug("Hitting Url Success : %s", requestUrl);
-        printJson(data["results"]);
 
+        if list_size < max_results:
+            img_list += data["results"] 
+        else: break
+        
+        
         if "next" not in data:
             logger.debug("No Next Page - Exiting");
             exit(0);
+            
+        list_size = len(img_list)
 
         requestUrl = url + data["next"];
+        
+        printJson(img_list[0: max_results])
+        
 
 def printJson(objs):
     for obj in objs:
-        print "Width {0}, Height {1}".format(obj["width"], obj["height"]);
-        print "Thumbnail {0}".format(obj["thumbnail"]);
-        print "Url {0}".format(obj["url"]);
-        print "Title {0}".format(obj["title"].encode('utf-8'));
-        print "Image {0}".format(obj["image"]);
-        print "__________";
+        print("Width {0}, Height {1}".format(obj["width"], obj["height"]))
+        #print("Thumbnail {0}".format(obj["thumbnail"]))
+        print("Url {0}".format(obj["url"]))
+        #clearprint("Title {0}".format(obj["title"].encode('utf-8')))
+        print("Image {0}".format(obj["image"]))
+        print("__________")
 
-search("audi q6");
+search("bees", 10)
