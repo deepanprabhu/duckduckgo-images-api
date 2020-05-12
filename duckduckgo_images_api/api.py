@@ -15,7 +15,7 @@ def search(keywords, max_results= None):
     list_size =  max_results -1
     
     params = {
-    	'q': keywords,
+    	'q': keywords
     };
 
     logger.debug("Hitting DuckDuckGo for Token");
