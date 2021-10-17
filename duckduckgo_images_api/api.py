@@ -4,7 +4,7 @@ import json;
 import time;
 import logging;
 
-logging.basicConfig(level=logging.DEBUG);
+logging.basicConfig(level=logging.INFO);
 logger = logging.getLogger(__name__)
 
 def search(keywords, max_results=None):
@@ -52,6 +52,7 @@ def search(keywords, max_results=None):
 
     logger.debug("Hitting Url : %s", requestUrl);
 
+    results = []
     while True:
         while True:
             try:
@@ -64,21 +65,22 @@ def search(keywords, max_results=None):
                 continue;
 
         logger.debug("Hitting Url Success : %s", requestUrl);
-        printJson(data["results"]);
+        results.extend(data["results"])
 
         if "next" not in data:
-            logger.debug("No Next Page - Exiting");
-            exit(0);
+            return results
+
+        if len(results) >= max_results:
+            return results[:max_results]
 
         requestUrl = url + data["next"];
 
 def printJson(objs):
     for obj in objs:
-        print "Width {0}, Height {1}".format(obj["width"], obj["height"]);
-        print "Thumbnail {0}".format(obj["thumbnail"]);
-        print "Url {0}".format(obj["url"]);
-        print "Title {0}".format(obj["title"].encode('utf-8'));
-        print "Image {0}".format(obj["image"]);
-        print "__________";
+        print("Width {0}, Height {1}".format(obj["width"], obj["height"]));
+        print("Thumbnail {0}".format(obj["thumbnail"]));
+        print("Url {0}".format(obj["url"]));
+        print("Title {0}".format(obj["title"].encode('utf-8')));
+        print("Image {0}".format(obj["image"]));
+        print("__________");
 
-search("audi q6");

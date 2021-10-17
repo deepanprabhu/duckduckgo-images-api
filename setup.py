@@ -14,7 +14,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     zip_safe=True,
-    install_requires=['requests>=2.18.4',],
+    install_requires=['requests>=2.18.4','Click'],
     setup_requires=['pytest-runner', ],
     tests_require=['pytest', 'flake8>=3.3.0', 'tox>=2.7.0', 'vcrpy>=1.11.1'],
     extras_require={
@@ -29,4 +29,9 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
     ],
     #  entry_points={'console_scripts': []},
+    entry_points={
+        'console_scripts': [
+            'ddg-image-search = duckduckgo_images_api.cli:search',
+        ],
+    },
 )

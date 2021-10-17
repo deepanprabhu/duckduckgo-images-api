@@ -10,6 +10,19 @@ First request pulls a much needed token,
 From 2nd request, we pull search results for FREE !!
 We have some basic logic, to retry the search engine when no results are returned.
 
+## Command-Line
+```sh
+Usage: ddg-image-search [OPTIONS] [KEYWORDS]...
+
+Options:
+  --max_results INTEGER
+  --help Show this message and exit.
+```
+
+Example:
+```sh
+ddg-image-search blue bus --max_results=2 | jq .
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
