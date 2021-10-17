@@ -4,7 +4,7 @@ import json;
 import time;
 import logging;
 
-logging.basicConfig(level=logging.DEBUG);
+logging.basicConfig(level=logging.INFO);
 logger = logging.getLogger(__name__)
 
 def search(keywords, max_results=None):
@@ -65,11 +65,13 @@ def search(keywords, max_results=None):
                 continue;
 
         logger.debug("Hitting Url Success : %s", requestUrl);
-        #printJson(data["results"]);
-        results.append(data["results"])
+        results.extend(data["results"])
 
         if "next" not in data:
             return results
+
+        if len(results) >= max_results:
+            return results[:max_results]
 
         requestUrl = url + data["next"];
 
@@ -82,4 +84,3 @@ def printJson(objs):
         print("Image {0}".format(obj["image"]));
         print("__________");
 
-# search("audi q6");
