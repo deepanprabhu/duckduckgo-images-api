@@ -52,6 +52,7 @@ def search(keywords, max_results=None):
 
     logger.debug("Hitting Url : %s", requestUrl);
 
+    results = []
     while True:
         while True:
             try:
@@ -64,11 +65,11 @@ def search(keywords, max_results=None):
                 continue;
 
         logger.debug("Hitting Url Success : %s", requestUrl);
-        printJson(data["results"]);
+        #printJson(data["results"]);
+        results.append(data["results"])
 
         if "next" not in data:
-            logger.debug("No Next Page - Exiting");
-            exit(0);
+            return results
 
         requestUrl = url + data["next"];
 
