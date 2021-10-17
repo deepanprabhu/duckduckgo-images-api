@@ -74,11 +74,11 @@ def search(keywords, max_results=None):
 
 def printJson(objs):
     for obj in objs:
-        print "Width {0}, Height {1}".format(obj["width"], obj["height"]);
-        print "Thumbnail {0}".format(obj["thumbnail"]);
-        print "Url {0}".format(obj["url"]);
-        print "Title {0}".format(obj["title"].encode('utf-8'));
-        print "Image {0}".format(obj["image"]);
-        print "__________";
+        print("Width {0}, Height {1}".format(obj["width"], obj["height"]));
+        print("Thumbnail {0}".format(obj["thumbnail"]));
+        print("Url {0}".format(obj["url"]));
+        print("Title {0}".format(obj["title"].encode('utf-8')));
+        print("Image {0}".format(obj["image"]));
+        print("__________");
 
-search("audi q6");
+# search("audi q6");
